@@ -3,14 +3,11 @@
 #include "matrix.h"
 using namespace std;
 
-int recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize, bool pathArray[], int pathSize, string stringPath);
+int recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize);
 
 void doit(Matrix &m)
 {
-	int pathSize = (5 + 5) - 2; //fix this later
 	int shortestPath;
-	bool pathArray[pathSize]; // true is down false is right
-	bool tempPathArray[pathSize];
 	string stringPath = "";
 	// print the whole matrix
 	m.print();
@@ -19,7 +16,7 @@ void doit(Matrix &m)
 	cout << "rows: " << m.getRows() << ", cols: " << m.getCols() << endl;
 
 
-	shortestPath = recurseMatrix(m, 1, 1, m.getRows(), m.getCols(), pathArray, pathSize, stringPath);
+	shortestPath = recurseMatrix(m, 1, 1, m.getRows(), m.getCols());
 
 	// Answer is: 
 	// false
@@ -32,13 +29,9 @@ void doit(Matrix &m)
 	// false
 
 	cout << "Ending: " << shortestPath << "\n";
-
-	// for (int i = 0; i < pathSize; i++) {
-	// 	cout << pathArray[i] << "\n";
-	// }
 }
 
-int recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize, bool pathArray[], int pathSize, string stringPath) {
+int recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize) {
 	int wentDown = 1000;
 	int wentRight = 1000;
 
@@ -48,32 +41,20 @@ int recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize, bool pathArray[
 	else {
 
 		if (x < xSize) {
-			stringPath += ", down";
-			wentDown = recurseMatrix(m, x + 1, y, xSize, ySize, pathArray, pathSize, stringPath);
-			cout << "Returned Down: " << wentDown << "\n";
+			wentDown = recurseMatrix(m, x + 1, y, xSize, ySize);
 		}
 
 		if (y < ySize) {
-			stringPath += ", right";
-			wentRight = recurseMatrix(m, x, y + 1, xSize, ySize, pathArray, pathSize, stringPath);
-			cout << "Returned Right: " << wentRight << "\n";
+			wentRight = recurseMatrix(m, x, y + 1, xSize, ySize);
 		}
 
 		cout << "At Coordinates x: " << x  << ", y: " << y << "\n";
 		if (wentDown < wentRight) {
 			wentDown = wentDown + m.get(x - 1, y - 1);
-			cout << "X-Size: " << wentDown << "\n";
-			stringPath += ", down";
-			pathArray[x - 1] = true;
-			cout << stringPath << "\n";
 			return wentDown;
 		}
 		else {
 			wentRight = wentRight + m.get(x - 1, y - 1);
-			cout << "Y-Size: " << wentRight << "\n";
-			stringPath += ", right";
-			pathArray[x - 1] = false;
-			cout << stringPath << "\n";
 			return wentRight;
 		}
 	}
