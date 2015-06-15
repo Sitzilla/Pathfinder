@@ -5,8 +5,7 @@
 #include <iostream>
 using namespace std;
 
-class Matrix
-{
+class Matrix {
     public:
         Matrix(int pRows = 10, int pCols = 10);
         Matrix(string file);
