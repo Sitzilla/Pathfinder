@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 #include "matrix.h"
+#include "path.h"
 using namespace std;
 
 bool testInputs (int argc, char **argv, Matrix &m) {
-    cout << "Testing\n";
     if(argc < 2)
     {
         cout << "Please enter a filename when you call the program!\n";
@@ -19,13 +19,21 @@ bool testInputs (int argc, char **argv, Matrix &m) {
     return true;
 }
 
-int recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize) {
-    int wentDown = 1000;
-    int wentRight = 1000;
+// return true if wentDown is smallest and above zero, OR if wentRight is -1 
+bool wentDownIsSmallest(Path wentDown, Path wentRight) {
+    return ((wentDown.getCost() < wentRight.getCost()) && (wentDown.getCost() > 0)) || (wentRight.getCost() < 0);
+}
+
+// recursive method that returns a Path object that contains the current path and its size
+Path recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize) {
+    Path wentDown;
+    Path wentRight;
 
     // base case if in the bottom-right index of the array
     if ((x == xSize) && (y == ySize)) {
-        return m.get(x - 1, y - 1);
+        Path baseCase;
+        baseCase.setCost(m.get(x - 1, y - 1));
+        return baseCase;
     }
     else {
 
@@ -39,13 +47,18 @@ int recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize) {
         }
 
         // return the smaller of the two paths
-        // cout << "At Coordinates x: " << x  << ", y: " << y << "\n";
-        if (wentDown < wentRight) {
-            wentDown = wentDown + m.get(x - 1, y - 1);
+        if (wentDownIsSmallest(wentDown, wentRight)) {
+            int pathCost = wentDown.getCost() + m.get(x - 1, y - 1);
+
+            wentDown.setCost(pathCost);
+            wentDown.setPath("down");
             return wentDown;
         }
         else {
-            wentRight = wentRight + m.get(x - 1, y - 1);
+            int pathCost = wentRight.getCost() + m.get(x - 1, y - 1);
+
+            wentRight.setCost(pathCost);
+            wentRight.setPath("right");
             return wentRight;
         }
     }
@@ -55,7 +68,7 @@ int recurseMatrix(Matrix &m, int x, int y, int xSize, int ySize) {
 int main(int argc, char **argv)
 {
     Matrix m;
-    int shortestPath;
+    Path shortestPath;
     string stringPath = "";
     bool legalInputs = false;
 
@@ -71,17 +84,8 @@ int main(int argc, char **argv)
         // call recursive 
         shortestPath = recurseMatrix(m, 1, 1, m.getRows(), m.getCols());
 
-        // Correct path should be: 
-        // right
-        // right
-        // down
-        // down
-        // down
-        // right
-        // down
-        // right
-
-        cout << "Shortest Path: " << shortestPath << "\n";
+        cout << "Shortest Path Cost: " << shortestPath.getCost() << "\n";
+        cout << "Shortest Path: " << shortestPath.getPath() << "\n";
     }
     return 0;
 }

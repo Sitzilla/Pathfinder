@@ -130,23 +130,3 @@ const int *Matrix::operator[](int i) const {
 int *Matrix::operator[](int i) {
     return array[i];
 }
-
-// Test the matrix class
-/*
-int main()
-{
-    Matrix m(2, 2);
-
-    m[0][0] = 1;
-    m[0][1] = 2;
-    m[1][0] = 3;
-    m[1][1] = 4;
-
-    cout << "Matrix 0, 0: " << m[0][0] << "\n"
-         << "Matrix 0, 1: " << m[0][1] << "\n"
-         << "Matrix 1, 0: " << m[1][0] << "\n"
-         << "Matrix 1, 1: " << m[1][1] << "\n";
-
-    return 0;
-}
-*/
